@@ -1,5 +1,7 @@
 ﻿using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.Layout.Layered;
+using Microsoft.Msagl.Miscellaneous;
 using System;
 using System.Globalization;
 using System.IO;
@@ -15,19 +17,54 @@ namespace Example01.Svg {
         private Graph drawingGraph { get;  }
 
         public Diagram(Graph drawingGraph) {
+            // create the Xml Writer
+            var streamWriter = new StreamWriter(ms);
+            var xmlWriterSettings = new XmlWriterSettings { Indent = true };
+            xmlWriter = XmlWriter.Create(streamWriter, xmlWriterSettings);
+
+            // set the Graph
+            this.drawingGraph = drawingGraph;
+        }
+
+        // Abstract the creation of the GeometryGraph and the node.CreateBoundary calls away in
+        // a single call on the Diagram.
+        public void Run() {
+            drawingGraph.CreateGeometryGraph();
+
+            foreach (var node in drawingGraph.Nodes) {
+                if (node is LabeledNode ln) ln.CreateBoundary();
+            }
+
+            LayoutHelpers.CalculateLayout(drawingGraph.GeometryGraph, new SugiyamaLayoutSettings(), null);
+
+            _run();
+        }
+
+        private void _run() {
+            // The culsture info is so that we "ToString" correctly, especially with
+            // things like doubles:  1,2344  ->   1.2344
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             try {
-                var streamWriter = new StreamWriter(ms);
-                var xmlWriterSettings = new XmlWriterSettings { Indent = true };
-                xmlWriter = XmlWriter.Create(streamWriter, xmlWriterSettings);
-                this.drawingGraph = drawingGraph;
-
+                
                 // flip coords
                 TransformGraphByFlippingY();
 
                 Open();
+
+                foreach (var sg in drawingGraph.RootSubgraph.AllSubgraphsDepthFirst()) {
+
+                    if (sg.Id == "the root subgraph's boundary") continue;
+
+                    new Rectangle {
+                        X = sg.BoundingBox.Left,
+                        Y = -sg.BoundingBox.Top,
+                        Width = sg.BoundingBox.Width,
+                        Height = sg.BoundingBox.Height,
+                        StrokeDashArray = 4
+                    }.WriteTo(xmlWriter);
+                }
 
                 foreach (var node in drawingGraph.Nodes) {
                     if (node is LabeledNode ln) {
@@ -60,7 +97,7 @@ namespace Example01.Svg {
             xmlWriter.WriteAttribute("id", "svg2");
             xmlWriter.WriteAttribute("version", "1.1");
             xmlWriter.WriteStartElement("g");
-            xmlWriter.WriteAttribute("transform", String.Format("translate({0},{1})", -box.Left, -box.Bottom));
+            xmlWriter.WriteAttribute("transform", String.Format("translate({0},{1})", -box.Left, -(box.Bottom - 12)));
         }
 
         /// <summary>

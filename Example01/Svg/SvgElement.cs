@@ -14,7 +14,7 @@ namespace Example01.Svg {
 
         public double StrokeWidth { get; set; } = 1;
         public bool Dashed { get; set; } = false;
-        public double StrokeDashArray { get; set; } = 1;
+        public double? StrokeDashArray { get; set; } = null;
 
 
 

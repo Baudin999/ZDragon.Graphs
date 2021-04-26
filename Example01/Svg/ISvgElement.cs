@@ -8,7 +8,7 @@ namespace Example01.Svg {
         bool Dashed { get; set; }
         Color FontColor { get; set; }
         double Height { get; set; }
-        double StrokeDashArray { get; set; }
+        double? StrokeDashArray { get; set; }
         double StrokeWidth { get; set; }
         double Width { get; set; }
         double X { get; set; }

@@ -47,6 +47,17 @@ namespace Example01.Svg {
             return "L " + PointToString(ls.End);
         }
 
+        internal static string EllipseToString(Ellipse ellipse) {
+            string largeArc = Math.Abs(ellipse.ParEnd - ellipse.ParStart) >= Math.PI ? "1" : "0";
+            string sweepFlag = ellipse.OrientedCounterclockwise() ? "1" : "0";
+
+            return String.Join(" ", "A", EllipseRadiuses(ellipse), DoubleToString(Point.Angle(new Point(1, 0), ellipse.AxisA) / (Math.PI / 180.0)), largeArc, sweepFlag, PointsToString(ellipse.End));
+        }
+
+        internal static string EllipseRadiuses(Ellipse ellipse) {
+            return DoubleToString(ellipse.AxisA.Length) + "," + DoubleToString(ellipse.AxisB.Length);
+        }
+
         public static Color backgroundColor = new Color(67, 141, 213);
         public static Color borderColor = new Color(60, 127, 192);
         public static Color fontColor = new Color(255, 255, 255);

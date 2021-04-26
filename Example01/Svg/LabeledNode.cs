@@ -12,16 +12,19 @@ namespace Example01.Svg {
     /// </summary>
     public class LabeledNode : Node {
         public List<Label> Labels { get; }
-        public SvgElement SvgElement { get; }
-        
+        public SvgElement SvgElement { get; } = SvgElement.DefaultElement();
 
+        public LabeledNode(string id) : base(id) {
+            this.Labels = new List<Label> {
+                new Label(id)
+            };
+
+        }
         public LabeledNode(string id, List<Label> labels) : base(id) {
             this.Labels = labels;
-            this.SvgElement = SvgElement.DefaultElement();
         }
         public LabeledNode(string id, List<string> labels) : base(id) {
             this.Labels = labels.Where(s => s != null).Select(s => new Svg.Label(s)).ToList();
-            this.SvgElement = SvgElement.DefaultElement();
         }
 
         public void CreateBoundary() {

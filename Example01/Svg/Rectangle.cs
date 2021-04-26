@@ -12,6 +12,11 @@ namespace Example01.Svg {
             writer.WriteAttribute("height", Height);
             writer.WriteAttribute("stroke", BorderColor);
             writer.WriteAttribute("fill", BackgroundColor);
+
+            if (this.StrokeDashArray != null) {
+                writer.WriteAttribute("stroke-dasharray", StrokeDashArray);
+            }
+
             writer.WriteEndElement();
         }
 

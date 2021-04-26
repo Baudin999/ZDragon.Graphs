@@ -32,8 +32,17 @@ namespace Example01.Svg {
                 AddArrow(iCurve.Start, geometryEdge.EdgeGeometry.SourceArrowhead.TipPosition, Edge);
             if (geometryEdge.EdgeGeometry != null && geometryEdge.EdgeGeometry.TargetArrowhead != null)
                 AddArrow(iCurve.End, geometryEdge.EdgeGeometry.TargetArrowhead.TipPosition, Edge);
-            //if (Edge.Label != null && Edge.Label.GeometryLabel != null && Edge.GeometryEdge.Label != null)
-                //WriteLabel(Edge.Label);
+            if (Edge.Label != null && Edge.Label.GeometryLabel != null && Edge.GeometryEdge.Label != null)
+                WriteLabel(Edge.Label);
+        }
+
+        private void WriteLabel(Microsoft.Msagl.Drawing.Label label) {
+            writer.WriteStartElement("text");
+            writer.WriteAttribute("x", label.BoundingBox.Left);
+            writer.WriteAttribute("y", label.BoundingBox.Bottom);
+            writer.WriteString(label.Text);
+            writer.WriteEndElement();
+
         }
 
         protected void AddArrow(Point start, Point end, Edge edge) {
@@ -133,6 +142,10 @@ namespace Example01.Svg {
             var cubic = segment as CubicBezierSegment;
             if (cubic != null)
                 return Utils.CubicBezierSegmentToString(cubic);
+
+            var ell = segment as Ellipse;
+            if (ell != null)
+                return Utils.EllipseToString(ell);
 
 
             throw new NotImplementedException();
