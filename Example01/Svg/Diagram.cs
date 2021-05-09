@@ -9,7 +9,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public class Diagram {
 
         private MemoryStream ms { get; } = new MemoryStream();
@@ -35,7 +35,11 @@ namespace Example01.Svg {
                 if (node is LabeledNode ln) ln.CreateBoundary();
             }
 
-            LayoutHelpers.CalculateLayout(drawingGraph.GeometryGraph, new SugiyamaLayoutSettings(), null);
+            var settings = new SugiyamaLayoutSettings {
+                NodeSeparation = 150,
+                LayerSeparation = 150
+            };
+            LayoutHelpers.CalculateLayout(drawingGraph.GeometryGraph, settings, null);
 
             _run();
         }

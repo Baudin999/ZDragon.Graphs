@@ -1,7 +1,7 @@
 ﻿using Microsoft.Msagl.Drawing;
 using System.Xml;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public class Rectangle : SvgElement {
         
         public override void WriteTo(XmlWriter writer) {

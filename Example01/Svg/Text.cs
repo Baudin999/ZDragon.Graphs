@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using dwg = System.Drawing;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public class Text : SvgElement {
         public string Content { get; set; }
         public double TextWidth { get; set; }

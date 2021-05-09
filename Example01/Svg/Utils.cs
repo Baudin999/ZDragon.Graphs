@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public static class Utils {
         public static void WriteAttribute(this XmlWriter xmlWriter, string attrName, object attrValue) {
             if (attrValue is double)

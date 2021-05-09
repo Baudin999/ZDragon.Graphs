@@ -3,12 +3,14 @@ using System;
 using dwg = System.Drawing;
 using System.Xml;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public class Label {
 
         public string LabelText { get; }
         public double Height => TextElement.TextHeight + PaddingTop;
         public double Width => TextElement.TextWidth;
+        public double MarginToPreviousLabel { get; set; } = 12d;
+
         public Color? Color { get; set; } = null;
 
         private readonly Text TextElement;

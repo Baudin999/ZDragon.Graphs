@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public class Connector : SvgElement {
         public Edge Edge { get; }
         private XmlWriter writer;
@@ -33,16 +33,15 @@ namespace Example01.Svg {
             if (geometryEdge.EdgeGeometry != null && geometryEdge.EdgeGeometry.TargetArrowhead != null)
                 AddArrow(iCurve.End, geometryEdge.EdgeGeometry.TargetArrowhead.TipPosition, Edge);
             if (Edge.Label != null && Edge.Label.GeometryLabel != null && Edge.GeometryEdge.Label != null)
-                WriteLabel(Edge.Label);
+                WriteConnectorLabel(Edge.Label);
         }
 
-        private void WriteLabel(Microsoft.Msagl.Drawing.Label label) {
+        private void WriteConnectorLabel(Microsoft.Msagl.Drawing.Label label) {
             writer.WriteStartElement("text");
-            writer.WriteAttribute("x", label.BoundingBox.Left);
-            writer.WriteAttribute("y", label.BoundingBox.Bottom);
+            writer.WriteAttribute("x", label.GeometryLabel.Center.X);
+            writer.WriteAttribute("y", label.GeometryLabel.Center.Y);
             writer.WriteString(label.Text);
             writer.WriteEndElement();
-
         }
 
         protected void AddArrow(Point start, Point end, Edge edge) {
@@ -51,11 +50,20 @@ namespace Example01.Svg {
             dir /= dir.Length;
 
             var s = new Point(-dir.Y, dir.X);
-
             s *= h.Length * ((float)Math.Tan(ArrowAngle * 0.5f * (Math.PI / 180.0)));
-
             var points = new[] { start + s, end, start - s };
             DrawArrowPolygon(edge.Attr, points);
+        }
+
+        protected void WriteFill(NodeAttr attr) {
+            var color = attr.FillColor;
+            if (color.A == 0 && !attr.Styles.Contains(Style.Filled)) {
+                writer.WriteAttribute("fill", "none");
+            }
+            else {
+                writer.WriteAttribute("fill", color);
+                writer.WriteAttribute("fill-opacity", color);
+            }
         }
 
         void WriteStroke(AttributeBase attr) {
@@ -179,16 +187,7 @@ namespace Example01.Svg {
             writer.WriteEndElement();
         }
 
-        protected void WriteFill(NodeAttr attr) {
-            var color = attr.FillColor;
-            if (color.A == 0 && !attr.Styles.Contains(Style.Filled)) {
-                writer.WriteAttribute("fill", "none");
-            }
-            else {
-                writer.WriteAttribute("fill", color);
-                writer.WriteAttribute("fill-opacity", color);
-            }
-        }
+       
 
        
 

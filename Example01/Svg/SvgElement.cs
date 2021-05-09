@@ -1,7 +1,7 @@
 ﻿using Microsoft.Msagl.Drawing;
 using System.Xml;
 
-namespace Example01.Svg {
+namespace SvgRendering.Svg {
     public abstract class SvgElement : ISvgElement {
 
         public double X { get; set; }

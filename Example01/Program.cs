@@ -1,9 +1,9 @@
 ﻿
-using Example01.Svg;
+using SvgRendering.Svg;
 using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
 
-namespace Example01 {
+namespace SvgRendering {
     class Program {
         static void Main(string[] args) {
             var drawingGraph = new Graph();
