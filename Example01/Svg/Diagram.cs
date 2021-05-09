@@ -35,8 +35,18 @@ namespace SvgRendering.Svg {
                 if (node is LabeledNode ln) ln.CreateBoundary();
             }
 
+            var routingSettings = new Microsoft.Msagl.Core.Routing.EdgeRoutingSettings {
+                UseObstacleRectangles = true,
+                BendPenalty = 100,
+                EdgeRoutingMode = Microsoft.Msagl.Core.Routing.EdgeRoutingMode.StraightLine
+            };
             var settings = new SugiyamaLayoutSettings {
-                NodeSeparation = 150,
+                ClusterMargin = 50,
+                PackingAspectRatio = 3,
+                PackingMethod = Microsoft.Msagl.Core.Layout.PackingMethod.Columns,
+                RepetitionCoefficientForOrdering = 0,
+                EdgeRoutingSettings = routingSettings,
+                NodeSeparation = 50,
                 LayerSeparation = 150
             };
             LayoutHelpers.CalculateLayout(drawingGraph.GeometryGraph, settings, null);
